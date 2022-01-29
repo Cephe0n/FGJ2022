@@ -6,7 +6,8 @@ using TMPro;
 public class UsePwThing : Usable
 {
     public TMP_InputField field;
-
+    public TMP_Text EnterPwText;
+    public GameObject WrongLight, Correctlight;
     [SerializeField]
     string correctPw;
     // Start is called before the first frame update
@@ -37,9 +38,21 @@ public class UsePwThing : Usable
         string givenPw = field.text;
 
         if (givenPw == correctPw)
-        field.text = "Access Granted";
+        Success();
         else
-        field.text = "Access Denied";
+        StartCoroutine(ShowWrongLight());
+    }
+
+    void Success()
+    {
+        StopCoroutine(ShowWrongLight());
+        EnterPwText.text = "ACCESS GRANTED";
+        field.text = "";
+        WrongLight.SetActive(false);
+        Correctlight.SetActive(true);
+        this.gameObject.layer = 0;
+        field.gameObject.SetActive(false);
+        base.Back();
     }
 
     public override void Back()
@@ -49,5 +62,15 @@ public class UsePwThing : Usable
             UsableText = "(LMB) Use";
             base.Back();
         }
+    }
+
+    IEnumerator ShowWrongLight()
+    {
+        WrongLight.SetActive(true);
+        EnterPwText.text = "ACCESS DENIED";
+        field.text = "";
+        yield return new WaitForSecondsRealtime(1.5f);
+        WrongLight.SetActive(false);
+        EnterPwText.text = "ENTER PASSWORD";
     }
 }

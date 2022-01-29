@@ -9,6 +9,7 @@ TagManager:
   - ItemHelpText
   - Cam
   - CloseCam
+  - ShiftPoint
   layers:
   - Default
   - TransparentFX
