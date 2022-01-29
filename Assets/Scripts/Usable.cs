@@ -19,6 +19,14 @@ public class Usable : MonoBehaviour
         input = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
     }
 
+    protected virtual void MoveCamera()
+    {
+        closeCam.Follow = camPos;
+        closeCam.LookAt = camLookDir;
+        closeCam.gameObject.SetActive(true);
+        cam.gameObject.SetActive(false);
+    }
+
     public virtual void Use()
     {
 
@@ -37,5 +45,5 @@ public class Usable : MonoBehaviour
     public virtual void Submit()
     {
 
-    } 
+    }
 }

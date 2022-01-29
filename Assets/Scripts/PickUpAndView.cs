@@ -20,10 +20,7 @@ public class PickUpAndView : Usable
             UsableText = "";
             ControlsText = "ESC/RMB - Back";
             input.SwitchCurrentActionMap("ViewItem");
-            closeCam.Follow = camPos;
-            closeCam.LookAt = camLookDir;
-            closeCam.gameObject.SetActive(true);
-            cam.gameObject.SetActive(false);
+            base.MoveCamera();
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DarkTonic.MasterAudio;
 
 public class UsePwThing : Usable
 {
@@ -25,10 +26,7 @@ public class UsePwThing : Usable
             UsableText = "";
             ControlsText = "ESC/RMB - Back\nEnter - Submit";
             input.SwitchCurrentActionMap("ViewItem");
-            closeCam.Follow = camPos;
-            closeCam.LookAt = camLookDir;
-            closeCam.gameObject.SetActive(true);
-            cam.gameObject.SetActive(false);
+            base.MoveCamera();
             field.ActivateInputField();
         }
     }
@@ -37,7 +35,7 @@ public class UsePwThing : Usable
     {
         string givenPw = field.text;
 
-        if (givenPw == correctPw)
+        if (givenPw.ToLower() == correctPw)
         Success();
         else
         StartCoroutine(ShowWrongLight());
@@ -46,13 +44,16 @@ public class UsePwThing : Usable
     void Success()
     {
         StopCoroutine(ShowWrongLight());
+        MasterAudio.PlaySound3DAtTransformAndForget("passwordCorrect2", this.transform);
         EnterPwText.text = "ACCESS GRANTED";
         field.text = "";
+        ControlsText = "";
         WrongLight.SetActive(false);
         Correctlight.SetActive(true);
         this.gameObject.layer = 0;
         field.gameObject.SetActive(false);
         base.Back();
+        GlobalStuff.instance.PuzzleSolved();
     }
 
     public override void Back()
@@ -67,6 +68,7 @@ public class UsePwThing : Usable
     IEnumerator ShowWrongLight()
     {
         WrongLight.SetActive(true);
+        MasterAudio.PlaySound3DAtTransformAndForget("passwordWrong", this.transform);
         EnterPwText.text = "ACCESS DENIED";
         field.text = "";
         yield return new WaitForSecondsRealtime(1.5f);

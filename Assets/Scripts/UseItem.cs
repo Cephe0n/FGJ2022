@@ -30,16 +30,21 @@ public class UseItem : MonoBehaviour
             usableScript = ItemToUse.GetComponent<Usable>();
             HelpText.text = usableScript.UsableText;
         }
+        else if (other.gameObject.layer == 7)
+        GlobalStuff.instance.RollForAmbient();
+
+        if (other.gameObject.CompareTag("Exit"))
+        GlobalStuff.instance.Escape();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == 6)
-        {
+        
             NearUsable = false;
             ItemToUse = null;
             HelpText.text = "";
-        }
+            ControlHintText.text = "";
+        
     }
 
     void OnUse()
@@ -56,9 +61,11 @@ public class UseItem : MonoBehaviour
     void OnBack()
     {
         if (ItemToUse != null)
+        {
+        ControlHintText.text = "";
         usableScript.Back();
         HelpText.text = usableScript.UsableText;
-        ControlHintText.text = "";
+        }
     }
 
     void OnSubmit()
