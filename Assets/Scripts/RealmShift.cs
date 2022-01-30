@@ -8,6 +8,7 @@ public class RealmShift : Usable
     public GameObject Realm1, Realm2;
 
     bool cooldownDone = true;
+    bool FirstTimeShift = true;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -17,20 +18,41 @@ public class RealmShift : Usable
 
     public override void Use()
     {
-        if (cooldownDone)
+        if (FirstTimeShift)
+        {    
+        StartCoroutine(FirstShift());
+        }
+        else if (cooldownDone)
         {
         //base.MoveCamera();
-        input.SwitchCurrentActionMap("NoControls");
-        GlobalStuff.instance.PlayerCam.gameObject.SetActive(false);
-        GlobalStuff.instance.ShiftCam.gameObject.SetActive(true); 
         StartCoroutine(Shift());
         }
+        
+    }
+
+    IEnumerator FirstShift()
+    {
+        input.SwitchCurrentActionMap("NoControls");
+        UsableText = "";
+        GlobalStuff.instance.SubtitleText.text = "What is this thing?";
+        MasterAudio.PlaySoundAndForget("whatisthisthing");
+        yield return new WaitForSecondsRealtime(2.5f);
+        MasterAudio.PlaySoundAndForget("feelslikeitscalling");
+        GlobalStuff.instance.SubtitleText.text = "Feels like it's... calling to me...";
+        yield return new WaitForSecondsRealtime(2.5f);
+        GlobalStuff.instance.SubtitleText.text = "";
+        StartCoroutine(Shift());
     }
 
     IEnumerator Shift()
     {
         cooldownDone = false;
         UsableText = "";
+        GlobalStuff.instance.ShiftCount();
+        input.SwitchCurrentActionMap("NoControls");
+        GlobalStuff.instance.PlayerCam.gameObject.SetActive(false);
+        closeCam.gameObject.SetActive(false);
+        GlobalStuff.instance.ShiftCam.gameObject.SetActive(true); 
 
         if (!GlobalStuff.instance.InHell)
         {
@@ -60,6 +82,15 @@ public class RealmShift : Usable
         GlobalStuff.instance.ShiftCam.gameObject.SetActive(false);
         cooldownDone = true;
         UsableText = "(LMB) Shift Realm";
+
+        if (FirstTimeShift)
+        {
+         FirstTimeShift = false;
+         GlobalStuff.instance.SubtitleText.text = "What the hell?";
+         MasterAudio.PlaySoundAndForget("whatthehell");
+         yield return new WaitForSecondsRealtime (2.5f);
+         GlobalStuff.instance.SubtitleText.text = "";
+        }
     }
 
 }

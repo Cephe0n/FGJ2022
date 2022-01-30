@@ -71,8 +71,10 @@ public class UsePwThing : Usable
         MasterAudio.PlaySound3DAtTransformAndForget("passwordWrong", this.transform);
         EnterPwText.text = "ACCESS DENIED";
         field.text = "";
+        base.Back();
         yield return new WaitForSecondsRealtime(1.5f);
         WrongLight.SetActive(false);
         EnterPwText.text = "ENTER PASSWORD";
+        base.Back();
     }
 }
